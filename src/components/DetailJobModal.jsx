@@ -186,8 +186,15 @@ const DetailJobModal = (props) => {
                                 <FaTachometerAlt className="icon" />
                                 <span>Thông tin đồng hồ</span>
                             </div>
-                            <div>Serial đồng hồ lỗi: {jobData.OldMeter?.serial_number}</div>
-                            <div>Số đọc đồng hồ: {jobData.meter_boook_number || 'Không có'}</div>
+                             {
+                                jobData.status === 'Đã thay thế'
+                                    ? <div>Serial đồng hồ thay thế: {jobData.NewMeter?.serial_number}</div>
+                                    : jobData.status === 'Chờ Thanh tra'
+                                        ? <div>Serial đồng hồ lỗi: {jobData.OldMeter?.serial_number}</div>
+                                        : <div>Serial đồng hồ hoạt động tốt: {jobData.OldMeter?.serial_number}</div>
+                            }
+
+                            <div>Số đọc đồng hồ: {jobData.meter_book_number || 'Không có'}</div>
                             <div>Chỉ số đồng hồ: {jobData.meter_value || 'Không có'}</div>
                         </div>
                         <div className='customer-info '>
