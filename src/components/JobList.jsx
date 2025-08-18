@@ -68,7 +68,7 @@ const JobList = () => {
                             <tr key={index} className="align-middle">
                                 <td className='text-center'>{job.job_id}</td>
                                   {
-                                    job.status === 'Xúc xả thành công' || job.status === 'Chờ Thanh tra' ?
+                                    job.status === 'Xúc xả thành công' || job.status === 'Chờ Thanh tra' || job.status === 'Mới'  ?
                                         <td>{job?.OldMeter?.serial_number}</td>
                                         :
                                         <td>{job?.NewMeter?.serial_number}</td>
