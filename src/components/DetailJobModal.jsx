@@ -16,8 +16,8 @@ const DetailJobModal = (props) => {
 
     const [serialNumber, setSerialNumber] = useState('');
 
-    let completionDate = new Date(jobData?.updatedAt);
-    completionDate.setDate(completionDate.getDate() + import.meta.env.VITE_DEADLINE_DAY);
+    let currentDate = new Date(jobData?.updatedAt);
+    let completionDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
 
     const renderButtons = (role, task_type) => {
         if (role === 'QLM' && task_type === 'QL Mạng') {
@@ -213,8 +213,8 @@ const DetailJobModal = (props) => {
                             <div>Địa chỉ: {jobData.address}</div>
                         </div>
                     </div>
-                    <div>Ngày tạo: {new Date(jobData.updatedAt).toLocaleDateString('vi-VN')}</div>
-                    <div style={{ color: 'red' }}>Hạn hoàn thành: {new Date(completionDate).toLocaleDateString('vi-VN')}</div>
+                     <div>Ngày tạo: {currentDate.toLocaleString('vi-VN', { hour12: false })}</div>
+                    <div style={{ color: 'red' }}>Hạn hoàn thành: {completionDate.toLocaleString('vi-VN', { hour12: false })}</div>
                     <div className='button-group d-flex justify-content-center '>
                         {renderButtons(role, jobData.task_type)}
                     </div>
