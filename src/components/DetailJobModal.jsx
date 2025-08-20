@@ -20,7 +20,7 @@ const DetailJobModal = (props) => {
     let completionDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
 
     const renderButtons = (role, task_type) => {
-        if (role === 'QLM' && task_type === 'QL Mạng') {
+        if (role === 'QLM' && task_type === 'Ghi thu') {
             return (
                 <div>
                     <Button variant="primary" onClick={() => handleFlushing('Xúc xả thành công')} >Xúc xả thành công</Button>
@@ -69,6 +69,29 @@ const DetailJobModal = (props) => {
         }
 
         return null;
+
+    }
+
+    const renderMeterStatus = (jobData) => {
+        {
+            jobData.status === 'Đã thay thế'
+                ? <div>Tình trạng đồng hồ: {jobData.NewMeter?.status}</div>
+                : <div>Tình trạng đồng hồ: {jobData.OldMeter?.status}</div>
+            { jobData.OldMeter?.status === 'Khác' && <div>Lý do cụ thể: {jobData.OldMeter?.note}</div> }
+        }
+        if (jobData.status === 'Đã thay thế') {
+            return (
+                <div>Tình trạng đồng hồ: {jobData.NewMeter?.status}</div>
+            )
+        }
+        else {
+            return (
+                <>
+                    <div>Tình trạng đồng hồ: {jobData.OldMeter?.status}</div>
+                    {jobData.OldMeter?.status === 'Khác' && <div>Lý do cụ thể: {jobData.OldMeter?.note}</div>}
+                </>
+            )
+        }
 
     }
 
@@ -167,17 +190,21 @@ const DetailJobModal = (props) => {
                                 <span>Thông tin đồng hồ</span>
                             </div>
                             {
+                                jobData.emergency_replacement === true && <div className='text-danger'>** Trường hợp thay thế đột xuất</div>
+                            }
+                            {
                                 jobData.status === 'Đã thay thế'
                                     ? <div>Serial đồng hồ thay thế: {jobData.NewMeter?.serial_number}</div>
                                     : jobData.status === 'Chờ Thanh tra'
                                         ? <div>Serial đồng hồ lỗi: {jobData.OldMeter?.serial_number}</div>
-                                        :jobData.status === 'Mới'
+                                        : jobData.status === 'Mới'
                                             ? <div>Serial đồng hồ lỗi: {jobData.OldMeter?.serial_number}</div>
                                             : <div>Serial đồng hồ hoạt động tốt: {jobData.OldMeter?.serial_number}</div>
                             }
-
                             <div>Số đọc đồng hồ: {jobData.meter_book_number || 'Không có'}</div>
                             <div>Chỉ số đồng hồ: {jobData.meter_value || 'Không có'}</div>
+                            <div>{renderMeterStatus(jobData)}</div>
+
                         </div>
                         <div className='customer-info w-50'>
                             <div className='title'>
@@ -195,18 +222,19 @@ const DetailJobModal = (props) => {
                                 <FaTachometerAlt className="icon" />
                                 <span>Thông tin đồng hồ</span>
                             </div>
-                           {
+                            {
                                 jobData.status === 'Đã thay thế'
                                     ? <div>Serial đồng hồ thay thế: {jobData.NewMeter?.serial_number}</div>
                                     : jobData.status === 'Chờ Thanh tra'
                                         ? <div>Serial đồng hồ lỗi: {jobData.OldMeter?.serial_number}</div>
-                                        :jobData.status === 'Mới'
+                                        : jobData.status === 'Mới'
                                             ? <div>Serial đồng hồ lỗi: {jobData.OldMeter?.serial_number}</div>
                                             : <div>Serial đồng hồ hoạt động tốt: {jobData.OldMeter?.serial_number}</div>
                             }
 
                             <div>Số đọc đồng hồ: {jobData.meter_book_number || 'Không có'}</div>
                             <div>Chỉ số đồng hồ: {jobData.meter_value || 'Không có'}</div>
+                            <div>{renderMeterStatus(jobData)}</div>
                         </div>
                         <div className='customer-info '>
                             <div className='title'>
@@ -217,7 +245,7 @@ const DetailJobModal = (props) => {
                             <div>Địa chỉ: {jobData.address}</div>
                         </div>
                     </div>
-                     <div>Ngày tạo: {currentDate.toLocaleString('vi-VN', { hour12: false })}</div>
+                    <div>Ngày tạo: {currentDate.toLocaleString('vi-VN', { hour12: false })}</div>
                     <div style={{ color: 'red' }}>Hạn hoàn thành: {completionDate.toLocaleString('vi-VN', { hour12: false })}</div>
                     <div className='button-group d-flex justify-content-center '>
                         {renderButtons(role, jobData.task_type)}

@@ -9,6 +9,8 @@ const RecordMeterForm = () => {
         address: '',
         meter_book_number: '',
         meter_value: '',
+        meter_status: '',
+        note: '',
     });
 
     const handleChange = (e) => {
@@ -16,11 +18,12 @@ const RecordMeterForm = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { serial_number, customer_name, address, meter_book_number, meter_value } = formData;
-            const res = await recordErrorMeter(serial_number, customer_name, address, meter_book_number, meter_value);
+            const { serial_number, customer_name, address, meter_book_number, meter_value, meter_status, note } = formData;
+            const res = await recordErrorMeter(serial_number, customer_name, address, meter_book_number, meter_value, meter_status, note);
             if (res.EC === 0) {
                 setFormData({
                     serial_number: '',
@@ -28,6 +31,8 @@ const RecordMeterForm = () => {
                     address: '',
                     meter_book_number: '',
                     meter_value: '',
+                    meter_status: '',
+                    note: '',
                 });
             }
         } catch (error) {
@@ -92,6 +97,37 @@ const RecordMeterForm = () => {
                             onChange={handleChange}
                         />
                     </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="meter_status">
+                        <Form.Label>*Tình trạng đồng hồ</Form.Label>
+                        <Form.Select
+                            name="meter_status"
+                            value={formData.meter_status}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="">-- Chọn tình trạng --</option>
+                            <option value="Chạy nhanh">Chạy nhanh</option>
+                            <option value="Chạy chậm">Chạy chậm</option>
+                            <option value="Kẹt đồng hồ">Kẹt đồng hồ</option>
+                            <option value="Vỡ mặt">Vỡ mặt</option>
+                            <option value="Mất cắp">Mất cắp</option>
+                            <option value="Khác">Khác</option>
+                        </Form.Select>
+                    </Form.Group>
+
+                    {formData.meter_status === "Khác" && (
+                        <Form.Group className="mb-3" controlId="note">
+                            <Form.Label>Ghi chú tình trạng</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="note"
+                                value={formData.note}
+                                onChange={handleChange}
+                                placeholder="Nhập chi tiết tình trạng đồng hồ"
+                            />
+                        </Form.Group>
+                    )}
 
                     <div className="d-flex justify-content-center">
                         <Button type="submit" variant="primary" className="px-4 py-2">
